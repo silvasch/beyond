@@ -1,16 +1,30 @@
+/// `beyond`'s error type.
 #[derive(Debug)]
 pub enum Error {
+    /// The client failed to serialize a request.
     SerializeRequest(serde_json::Error),
+    /// The server failed to serialize a response.
     SerializeResponse(serde_json::Error),
+    /// The server failed to deserialize a request.
     DeserializeRequest(serde_json::Error),
+    /// The client failed to deserialize a response.
     DeserializeResponse(serde_json::Error),
 
+    /// The server failed to decode the base64-form of the request.
     Base64DecodeRequest(base64::DecodeError),
+    /// The client failed to decode the base64-form of the response.
     Base64DecodeResponse(base64::DecodeError),
 
+    /// The client failed to launch the SSH process.
     SSHProcessLaunch(std::io::Error),
+    /// Something went wrong on the server or the client while
+    /// while executing the SSH process.
+    /// This could happen if the server refused the connection,
+    /// if the server does not have the corresponding binary installed
+    /// or the server binary panicked.
     SSHProcessExecute { stderr: String, },
 
+    /// The requested route does not exist.
     InvalidRoute { route_name: String },
 }
 
