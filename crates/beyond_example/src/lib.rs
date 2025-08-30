@@ -12,9 +12,9 @@ pub struct HelloResponse {
 
 #[derive(beyond::Beyond)]
 #[beyond_route(hello HelloRequest HelloResponse)]
-pub struct Internal;
+pub struct ServerImpl;
 
-impl Internal {
+impl ServerImpl {
     pub fn hello(&self, request: HelloRequest) -> HelloResponse {
         HelloResponse {
             message: format!("Hello, {}!", request.name),

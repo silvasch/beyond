@@ -10,6 +10,8 @@ pub enum Error {
 
     SSHProcessLaunch(std::io::Error),
     SSHProcessExecute { stderr: String, },
+
+    InvalidRoute { route_name: String },
 }
 
 impl std::fmt::Display for Error {
@@ -25,6 +27,8 @@ impl std::fmt::Display for Error {
 
             Error::SSHProcessLaunch(e) => write!(f, "failed to launch the ssh process: {}", e),
             Error::SSHProcessExecute { stderr } => write!(f, "failure while executing the ssh call: {}", stderr),
+
+            Error::InvalidRoute { route_name } => write!(f, "'{}' is not a valid route", route_name),
         }
     }
 }
@@ -42,6 +46,8 @@ impl std::error::Error for Error {
 
             Error::SSHProcessLaunch(e) => Some(e),
             Error::SSHProcessExecute { stderr: _ } => None,
+
+            Error::InvalidRoute { route_name: _ } => None,
         }
     }
 }
