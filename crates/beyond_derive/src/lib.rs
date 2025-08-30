@@ -86,7 +86,7 @@ fn beyond_derive_impl(input: proc_macro::TokenStream) -> syn::Result<proc_macro:
             // Insert the server-side wrappers around the user logic here.
             #serverside_wrappers
 
-            pub fn run(mut server: #server_ident) -> ::core::option::Option<::std::process::ExitCode> {
+            pub fn run(server: #server_ident) -> ::core::option::Option<::std::process::ExitCode> {
                 // Check if the should actually run.
                 if ::std::env::args().nth(1).unwrap_or_default() != "beyond-server-process" {
                     return ::core::option::Option::None;
