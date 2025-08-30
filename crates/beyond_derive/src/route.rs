@@ -62,7 +62,7 @@ impl Route {
 
         quote! {
             #[doc(hidden)]
-            fn #ident(server: &mut #server_ident, encoded_request: String) -> ::core::result::Result<String, ::beyond::Error> {
+            fn #ident(server: #server_ident, encoded_request: String) -> ::core::result::Result<String, ::beyond::Error> {
                 let request: #request = ::beyond::serde::decode_request(&encoded_request)?;
                 let response: #response = server.#name(request);
                 let encoded_response = ::beyond::serde::encode_response(response)?;
@@ -78,7 +78,7 @@ impl Route {
         let ident = quote::format_ident!("{}_wrapper", name);
 
         quote! {
-            stringify!(#name) => Self::#ident(&mut server, encoded_request),
+            stringify!(#name) => Self::#ident(server, encoded_request),
         }
     }
 }
