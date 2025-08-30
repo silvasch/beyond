@@ -19,9 +19,26 @@ impl Route {
             pub fn #name(&self, request: #request) -> ::core::result::Result<#response, ::beyond::Error> {
                 let encoded_request = ::beyond::serde::encode_request(request)?;
 
-                println!("{}", encoded_request);
+                let output = ::std::process::Command::new("ssh")
+                    .args([
+                        &self.destination,
+                        &self.server_binary,
+                        "beyond-server-process",
+                        stringify!(#name),
+                        &encoded_request,
+                    ])
+                    .output()
+                    .map_err(::beyond::Error::SSHProcessLaunch)?;
 
-                todo!("send request to server and get response")
+                if !output.status.success() {
+                    let stderr = String::from_utf8_lossy(&output.stderr).to_string();
+                    return Err(::beyond::Error::SSHProcessExecute { stderr });
+                }
+
+                let encoded_response = String::from_utf8_lossy(&output.stdout);
+                let response = ::beyond::serde::decode_response(&encoded_response)?;
+
+                Ok(response)
             }
         }
     }

@@ -7,6 +7,9 @@ pub enum Error {
 
     Base64DecodeRequest(base64::DecodeError),
     Base64DecodeResponse(base64::DecodeError),
+
+    SSHProcessLaunch(std::io::Error),
+    SSHProcessExecute { stderr: String, },
 }
 
 impl std::fmt::Display for Error {
@@ -19,6 +22,9 @@ impl std::fmt::Display for Error {
 
             Error::Base64DecodeRequest(e) => write!(f, "failed to decode the request from base 64: {}", e),
             Error::Base64DecodeResponse(e) => write!(f, "failed to decode the response from base 64: {}", e),
+
+            Error::SSHProcessLaunch(e) => write!(f, "failed to launch the ssh process: {}", e),
+            Error::SSHProcessExecute { stderr } => write!(f, "failure while executing the ssh call: {}", stderr),
         }
     }
 }
@@ -33,6 +39,9 @@ impl std::error::Error for Error {
 
             Error::Base64DecodeRequest(e) => Some(e),
             Error::Base64DecodeResponse(e) => Some(e),
+
+            Error::SSHProcessLaunch(e) => Some(e),
+            Error::SSHProcessExecute { stderr: _ } => None,
         }
     }
 }

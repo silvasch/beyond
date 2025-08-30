@@ -11,8 +11,15 @@ fn main() -> ExitCode {
     let destination = std::env::args().nth(1).expect("if element two exists, element one should always exist");
 
     let client = beyond_example::Beyond::new_client(destination, "beyond_example_server".to_string());
-    let response = client.hello(beyond_example::HelloRequest { name }).unwrap();
+    let response = match client.hello(beyond_example::HelloRequest { name }) {
+        Ok(response) => response,
+        Err(e) => {
+            eprintln!("error: {}", e);
+            return ExitCode::FAILURE;
+        }
+    };
     println!("{}", response.message);
 
     ExitCode::SUCCESS
 }
+
