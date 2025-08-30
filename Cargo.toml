@@ -1,5 +1,7 @@
 [workspace]
 resolver = "3"
 members = [
-    "crates/beyond"
+    "crates/beyond",
+    "crates/beyond_derive",
+    "crates/beyond_example",
 ]
