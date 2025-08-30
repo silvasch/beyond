@@ -16,8 +16,12 @@ impl Route {
         let response = &self.response;
 
         quote! {
-            pub fn #name(&self, request: #request) -> #response {
-                todo!("implement clientside logic")
+            pub fn #name(&self, request: #request) -> ::core::result::Result<#response, ::beyond::Error> {
+                let encoded_request = ::beyond::serde::encode_request(request)?;
+
+                println!("{}", encoded_request);
+
+                todo!("send request to server and get response")
             }
         }
     }

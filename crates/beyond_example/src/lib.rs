@@ -1,7 +1,11 @@
+use serde::{Deserialize, Serialize};
+
+#[derive(Deserialize, Serialize)]
 pub struct HelloRequest {
     pub name: String,
 }
 
+#[derive(Deserialize, Serialize)]
 pub struct HelloResponse {
     pub message: String,
 }
