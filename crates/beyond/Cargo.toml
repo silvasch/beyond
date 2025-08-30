@@ -2,6 +2,10 @@
 name = "beyond"
 version = "0.1.0"
 edition = "2024"
+description = "Easily execute rust functions on an external machine instead of locally."
+license = "MIT"
+repository = "https://github.com/silvasch/beyond"
+documentation = "https://docs.rs/beyond"
 
 [dependencies]
 base64 = "0.22.1"

@@ -2,6 +2,10 @@
 name = "beyond_derive"
 version = "0.1.0"
 edition = "2024"
+description = "Derive macros for beyond."
+license = "MIT"
+repository = "https://github.com/silvasch/beyond"
+documentation = "https://docs.rs/beyond-derive"
 
 [lib]
 proc-macro = true
