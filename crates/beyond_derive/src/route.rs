@@ -21,26 +21,17 @@ impl Route {
         let response = &self.response;
 
         quote! {
-            pub fn #name(&self, request: #request) -> ::core::result::Result<#response, ::beyond::Error> {
+            pub fn #name(&mut self, request: #request) -> ::core::result::Result<#response, ::beyond::Error> {
                 // Prepare the request to be used as a command-line argument.
                 let encoded_request = ::beyond::serde::encode_request(request)?;
 
-                // Execute the server binary over SSH.
-                let output = ::std::process::Command::new("ssh")
-                    .args([
-                        &self.destination,
-                        &self.server_binary,
-                        "beyond-server-process",
-                        stringify!(#name),
-                        &encoded_request,
-                    ])
-                    .output()
-                    .map_err(::beyond::Error::SSHProcessLaunch)?;
+                let output = self.ssh.execute(&format!("{} beyond-server-process {} {}", self.server_binary, stringify!(#name), encoded_request))?;
 
                 // Check if the execution succeeded and handle the failure case.
                 if !output.status.success() {
                     let stderr = String::from_utf8_lossy(&output.stderr).to_string();
-                    return ::core::result::Result::Err(::beyond::Error::SSHProcessExecute { stderr });
+                    todo!()
+                    // return ::core::result::Result::Err(::beyond::Error::SSHProcessExecute { stderr });
                 }
 
                 // Extract the response and decode it.

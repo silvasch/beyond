@@ -72,26 +72,26 @@ fn beyond_derive_impl(input: proc_macro::TokenStream) -> syn::Result<proc_macro:
     // Add the core logic to the final code.
     output.extend(quote::quote! {
         pub struct Client {
-            destination: String,
+            ssh: ::beyond::ssh::SSH,
             server_binary: String,
         }
 
         impl Client {
-            pub fn new(destination: String, server_binary: String) -> Self {
-                Self { destination, server_binary }
+            pub fn new(destination: &str, server_binary: String) -> ::core::result::Result<Self, ::beyond::Error> {
+                Ok(Self {
+                    ssh: ::beyond::ssh::SSH::new(destination)?,
+                    server_binary,
+                })
             }
 
-            pub fn check_server(&self) -> ::core::result::Result<bool, ::beyond::Error> {
-                let output = ::std::process::Command::new("ssh")
-                    .args([
-                        &self.destination,
-                        "which",
-                        &self.server_binary,
-                    ])
-                    .output()
-                    .map_err(::beyond::Error::SSHProcessLaunch)?;
+            pub fn check_server(&mut self) -> ::core::result::Result<(), ::beyond::Error> {
+                let output = self.ssh.execute(&format!("which {}", self.server_binary))?;
 
-                Ok(output.status.success())
+                if output.status.success() {
+                    ::core::result::Result::Ok(())
+                } else {
+                    ::core::result::Result::Err(::beyond::Error::ServerComponentNotInstalled)
+                }
             }
         }
 
