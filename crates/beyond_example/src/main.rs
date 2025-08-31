@@ -85,6 +85,12 @@ fn main() -> ExitCode {
     // as arguments.
     let client = beyond_impl::Client::new(destination, "beyond_example".to_string());
 
+    // Check if the server is correctly set up.
+    if !client.check_server().unwrap() {
+        eprintln!("error: either the server is not available, or the server binary is not installed on it.");
+        return ExitCode::FAILURE;
+    }
+
     // Execute one of the functions that was defined on the server.
     // It has the exact same signature, but executes it on the server
     // by invoking the server binary over SSH.
@@ -99,3 +105,4 @@ fn main() -> ExitCode {
 
     ExitCode::SUCCESS
 }
+
