@@ -10,3 +10,5 @@ pub use error::Error;
 
 #[doc(hidden)]
 pub mod serde;
+
+pub mod ssh;
