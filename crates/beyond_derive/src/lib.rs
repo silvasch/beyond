@@ -80,6 +80,19 @@ fn beyond_derive_impl(input: proc_macro::TokenStream) -> syn::Result<proc_macro:
             pub fn new(destination: String, server_binary: String) -> Self {
                 Self { destination, server_binary }
             }
+
+            pub fn check_server(&self) -> ::core::result::Result<bool, ::beyond::Error> {
+                let output = ::std::process::Command::new("ssh")
+                    .args([
+                        &self.destination,
+                        "which",
+                        &self.server_binary,
+                    ])
+                    .output()
+                    .map_err(::beyond::Error::SSHProcessLaunch)?;
+
+                Ok(output.status.success())
+            }
         }
 
         impl #server_ident {
