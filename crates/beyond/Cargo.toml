@@ -1,6 +1,6 @@
 [package]
 name = "beyond"
-version = "0.1.1"
+version = "0.1.3"
 edition = "2024"
 description = "Easily execute rust functions on an external machine instead of locally."
 license = "MIT"
